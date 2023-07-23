@@ -1,4 +1,9 @@
-require('dotenv').config();
+const path = require('path');
+console.log('.env path is: ', path.resolve(process.cwd(), `.env.${process.env.NODE_ENV}`));
+require('dotenv').config({
+  path: path.resolve(process.cwd(), `.env.${process.env.NODE_ENV}`),
+});
+console.log(process.env);
 
 // This is the header comment that will be included at the top of the "dist/openpixel.js" file
 var HEADER_COMMENT =
