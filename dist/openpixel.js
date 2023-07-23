@@ -476,4 +476,4 @@ window.onload = function () {
     }.bind(dataAttributes[i]));
   }
 };
-}(window, document, window["opix"], "opix", "https://pixel.blabberjax.com/api/Pixel/Track.jpg", 1));
+}(window, document, window["opix"], "opix", "https://schedule.blabberjax.com/pixel/api/Pixel/Track.jpg", 1));
