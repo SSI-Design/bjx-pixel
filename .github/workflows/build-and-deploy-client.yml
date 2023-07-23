@@ -1,0 +1,30 @@
+name: build and deploy client
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-and-deploy-app:
+    name: build-and-deploy-app
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: npm ci and build
+        run: |
+          npm ci
+          $Env:NODE_ENV = "production"
+          npm run dist
+
+      - name: Deploy to Server
+        run: |
+          cd ui\build
+          winscp.com /script=C:\\actions-runner\WinSCPScript.txt /parameter ${{ secrets.PRD_SFTP_PASS }}  ${{ vars.PRD_SFTP_PATH }}/app/ /log="winscp.log" /loglevel=0
