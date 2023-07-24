@@ -1,13 +1,17 @@
 class Cookie {
   static prefix() {
-    return  `__${pixelFuncName}_`;
+    return `__${pixelFuncName}_`;
   }
 
   static set(name, value, minutes, path = '/') {
+    if (!window.hasOwnProperty('CONSENT_ACCEPTED') || !window.CONSENT_ACCEPTED) {
+      return;
+    }
+
     var expires = '';
     if (Helper.isPresent(minutes)) {
       var date = new Date();
-      date.setTime(date.getTime() + (minutes * 60 * 1000));
+      date.setTime(date.getTime() + minutes * 60 * 1000);
       expires = `expires=${date.toGMTString()}; `;
     }
     document.cookie = `${this.prefix()}${name}=${value}; ${expires}path=${path}; SameSite=Lax`;
@@ -16,16 +20,16 @@ class Cookie {
   static get(name) {
     var name = `${this.prefix()}${name}=`;
     var ca = document.cookie.split(';');
-    for (var i=0; i<ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') c = c.substring(1);
+      if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
     }
     return;
   }
 
   static delete(name) {
-    this.set(name,'',-100);
+    this.set(name, '', -100);
   }
 
   static exists(name) {
@@ -33,7 +37,16 @@ class Cookie {
   }
 
   static setUtms() {
-    var utmArray = ['utm_source', 'utm_medium', 'utm_term', 'utm_content', 'utm_campaign', 'utm_source_platform', 'utm_creative_format', 'utm_marketing_tactic'];
+    var utmArray = [
+      'utm_source',
+      'utm_medium',
+      'utm_term',
+      'utm_content',
+      'utm_campaign',
+      'utm_source_platform',
+      'utm_creative_format',
+      'utm_marketing_tactic',
+    ];
     var exists = false;
     for (var i = 0, l = utmArray.length; i < l; i++) {
       if (Helper.isPresent(Url.getParameterByName(utmArray[i]))) {
@@ -42,7 +55,8 @@ class Cookie {
       }
     }
     if (exists) {
-      var val, save = {};
+      var val,
+        save = {};
       for (var i = 0, l = utmArray.length; i < l; i++) {
         val = Url.getParameterByName(utmArray[i]);
         if (Helper.isPresent(val)) {

@@ -108,6 +108,9 @@ var Cookie = /*#__PURE__*/function () {
     key: "set",
     value: function set(name, value, minutes) {
       var path = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '/';
+      if (!window.hasOwnProperty('CONSENT_ACCEPTED') || !window.CONSENT_ACCEPTED) {
+        return;
+      }
       var expires = '';
       if (Helper.isPresent(minutes)) {
         var date = new Date();
